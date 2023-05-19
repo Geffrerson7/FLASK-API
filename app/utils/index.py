@@ -1,7 +1,6 @@
 from jwt import encode, decode, exceptions
 import os
 from datetime import datetime, timedelta
-from flask import jsonify
 import bcrypt
 
 
@@ -20,23 +19,18 @@ def generate_token(data: dict) -> str:
     return token
 
 
-def validated_token(token: str, output=False):
+def validate_token(token: str):
     try:
-        if output:
-            return decode(
-                token,
-                key=os.environ.get("SECRET_KEY"),
-                algorithms=["HS256"],
-            )
+        decoded_token = decode(
+            token,
+            key=os.environ.get("SECRET_KEY"),
+            algorithms=["HS256"],
+        )
+        return decoded_token
     except exceptions.DecodeError:
-        response = jsonify({"message": "Invalid token"})
-        response.status_code = 401
-        return response
-
+        return None
     except exceptions.ExpiredSignatureError:
-        response = jsonify({"message": "Token Expired"})
-        response.status_code = 401
-        return response
+        return None
 
 
 def compare_password(candidate_password: str, hashed_password: str) -> bool:

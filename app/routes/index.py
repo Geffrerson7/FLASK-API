@@ -1,11 +1,13 @@
-from flask import request, jsonify, redirect, url_for
+from flask import request, jsonify
 from flask_smorest import Blueprint, abort
 from app.models.user import User
+from app.models.project import Project
 from app.db import db
 import bcrypt
-from app.schemas import UserSchema
+from app.schemas.index import UserSchema, ProjectSchema
 from app.utils.index import compare_password, generate_token
 from datetime import datetime
+from app.middlewares.index import jwt_required
 
 
 projects_router = Blueprint(
@@ -92,13 +94,8 @@ def delete_user(id):
     return jsonify({"message": "User deleted"}), 204
 
 
-@projects_router.route("/apidocs")
-def api_docs():
-    return redirect(url_for("api-docs.openapi_swagger_ui"))
-
-
 @projects_router.route("/user/login", methods=["POST"])
-def add_user():
+def login_user():
     user_schema = UserSchema()
     user_data = request.json
     password = user_data.get("password")
@@ -126,3 +123,4 @@ def add_user():
             )
         else:
             return abort(403, message="Incorrect password!")
+
