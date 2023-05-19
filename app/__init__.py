@@ -10,5 +10,5 @@ def create_app():
     app.config.from_object(Config)
     app.register_blueprint(projects_router)
     db.init_app(app)
-    
+        
     return app
