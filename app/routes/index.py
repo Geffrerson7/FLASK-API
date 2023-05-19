@@ -11,7 +11,7 @@ from app.middlewares.index import jwt_required
 
 
 projects_router = Blueprint(
-    "projects_router", "projects", url_prefix="/api", description="User API"
+    "projects_router", "projects", url_prefix="/api", description="It is an API for creating personal portfolio projects."
 )
 
 
@@ -30,6 +30,7 @@ def get_user(id):
         abort(404, message="User not found")
 
     user_schema = UserSchema()
+    
     result = user_schema.dump(user)
     return result
 
@@ -123,4 +124,38 @@ def login_user():
             )
         else:
             return abort(403, message="Incorrect password!")
+        
+@projects_router.route("/project", methods=["GET"])
+@jwt_required
+def get_projects():
+    projects = Project.query.all()
+    project_schema = ProjectSchema(many=True)
+    result = project_schema.dump(projects)
+    return result
 
+@projects_router.route("/project/<int:id>", methods=["GET"])
+@jwt_required
+def get_user(id):
+    project = Project.query.get(id)
+    if not project:
+        abort(404, message="Project not found")
+
+    project_schema = ProjectSchema()
+    
+    result = project_schema.dump(project)
+    return result
+
+@projects_router.route("/project/create", methods=["POST"])
+@projects_router.response(201, ProjectSchema)
+@jwt_required
+def add_project():
+    project_schema = ProjectSchema()
+    project_data = request.json
+    project = project_schema.load(project_data)
+
+    project_instance = Project(**project)
+
+    db.session.add(project_instance)
+    db.session.commit()
+    
+    return jsonify({"message": "Project created successfully"}), 201
