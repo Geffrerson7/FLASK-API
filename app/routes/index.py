@@ -4,6 +4,8 @@ from app.models.user import User
 from app.db import db
 import bcrypt
 from app.schemas import UserSchema
+from app.utils.index import compare_password, generate_token
+from datetime import datetime
 
 
 projects_router = Blueprint(
@@ -31,6 +33,7 @@ def get_user(id):
 
 
 @projects_router.route("/user/create", methods=["POST"])
+@projects_router.response(201, UserSchema)
 def add_user():
     user_schema = UserSchema()
     user_data = request.json
@@ -92,3 +95,34 @@ def delete_user(id):
 @projects_router.route("/apidocs")
 def api_docs():
     return redirect(url_for("api-docs.openapi_swagger_ui"))
+
+
+@projects_router.route("/user/login", methods=["POST"])
+def add_user():
+    user_schema = UserSchema()
+    user_data = request.json
+    password = user_data.get("password")
+    email = user_data.get("email")
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        abort(404, message="User does not exist!")
+    else:
+        password_response = compare_password(password, user.password)
+        if password_response:
+            user_data = user_schema.dump(user)
+            token = generate_token(user_data)
+            user.last_session = datetime.now()
+            db.session.commit()
+            return (
+                jsonify(
+                    {
+                        "message": "User logged",
+                        "token": token,
+                        "last_session": user.last_session,
+                    }
+                ),
+                201,
+            )
+        else:
+            return abort(403, message="Incorrect password!")
