@@ -159,3 +159,21 @@ def add_project():
     db.session.commit()
     
     return jsonify({"message": "Project created successfully"}), 201
+
+@projects_router.route("/project/update/<int:id>", methods=["PUT"])
+@jwt_required
+def update_project(id):
+    project = Project.query.get(id)
+    if not project:
+        abort(404, message="Project not found")
+
+    project_schema = ProjectSchema()
+    updated_data = request.json
+    updated_project = project_schema.load(updated_data, instance=project, partial=True)
+
+    db.session.commit()
+    updated_project_data = project_schema.dump(updated_project)
+
+    response_data = {"message": "Project updated successfully", "project": updated_project_data}
+
+    return jsonify(response_data), 200
