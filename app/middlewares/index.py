@@ -18,9 +18,9 @@ def jwt_required(f):
             response = jsonify({"message": "Invalid token"})
             response.status_code = 401
             return response
-
-        # Si el token es válido, puedes realizar acciones adicionales aquí, como obtener el usuario asociado al token
-
+        
+        user_id = validated_token.get('id')
+        
         return f(*args, **kwargs)
 
     return decorated_function
