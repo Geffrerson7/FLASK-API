@@ -92,7 +92,7 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
 
-    return jsonify({"message": "User deleted"}), 204
+    return jsonify({"message": "User deleted"}), 200
 
 
 @projects_router.route("/user/login", methods=["POST"])
@@ -177,3 +177,15 @@ def update_project(id):
     response_data = {"message": "Project updated successfully", "project": updated_project_data}
 
     return jsonify(response_data), 200
+
+@projects_router.route("/project/delete/<int:id>", methods=["DELETE"])
+@jwt_required
+def delete_project(id):
+    project = Project.query.get(id)
+    if not project:
+        abort(404, message="Project not found")
+
+    db.session.delete(project)
+    db.session.commit()
+
+    return jsonify({"message": "Project deleted"}), 200
