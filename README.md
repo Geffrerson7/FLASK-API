@@ -66,7 +66,7 @@ And navigate to
 http://127.0.0.1:5000/
 ```
 
-## Tecnologies and programming languages 
+## Technologies and programming languages 
 
 * **Python** (v. 3.11.2) [Source](https://www.python.org/)
 * **Flask** (v. 2.3.2)  [Source](https://flask.palletsprojects.com/en/2.2.x/)

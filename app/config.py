@@ -11,12 +11,14 @@ class Config:
     OPENAPI_URL_PREFIX = "/"
     OPENAPI_SWAGGER_UI_PATH = "/swagger-ui"
     OPENAPI_SWAGGER_UI_URL = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    OPENAPI_SWAGGER_UI_CONFIG = {'deepLinking': True, "syntaxHighlight":{"activate":True,"theme":"monokai"}}
     OPENAPI_REDOC_PATH = "/redoc"
     OPENAPI_REDOC_URL = (
         "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
     )
     OPENAPI_RAPIDOC_PATH = "/rapidoc"
     OPENAPI_RAPIDOC_URL = "https://unpkg.com/rapidoc/dist/rapidoc-min.js"
+    OPENAPI_RAPIDOC_CONFIG = {"theme": "dark"}
     SECRET_KEY = os.environ.get('SECRET_KEY')
     FLASK_APP = os.environ.get('FLASK_APP')
     FLASK_DEBUG = os.environ.get('FLASK_DEBUG')

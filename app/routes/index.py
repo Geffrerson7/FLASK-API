@@ -14,7 +14,9 @@ projects_router = Blueprint(
     "projects_router",
     "projects",
     url_prefix="/api",
-    description="It is an API for creating personal portfolio projects.",
+    description="It is an API for creating personal portfolio projects. \
+                 \n\nAuthor: Gefferson Casasola \
+                 \nContact: gefferson.casasola@gmail.com",
 )
 
 
