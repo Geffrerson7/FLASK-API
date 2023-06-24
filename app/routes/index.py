@@ -23,10 +23,20 @@ projects_router = Blueprint(
 @projects_router.route("/user", methods=["GET"])
 def get_users():
     try:
-        users = User.query.all()
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("per_page", default=10, type=int)
+
+        users = User.query.paginate(page=page, per_page=per_page)
         user_schema = UserSchema(many=True)
-        result = user_schema.dump(users)
-        return result
+        result = user_schema.dump(users.items)
+
+        return {
+            "data": result,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": users.pages,
+            "total_items": users.total,
+        }
     except Exception as e:
         return jsonify({"message": "An error occurred"}), 500
 
@@ -156,10 +166,20 @@ def login_user():
 @jwt_required
 def get_projects():
     try:
-        projects = Project.query.all()
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("per_page", default=10, type=int)
+
+        projects = Project.query.paginate(page=page, per_page=per_page)
         project_schema = ProjectSchema(many=True)
-        result = project_schema.dump(projects)
-        return result
+        result = project_schema.dump(projects.items)
+
+        return {
+            "data": result,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": projects.pages,
+            "total_items": projects.total,
+        }
     except Exception as e:
         return jsonify({"message": "An error occurred"}), 500
 
