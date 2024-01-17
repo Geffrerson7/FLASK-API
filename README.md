@@ -66,6 +66,30 @@ And navigate to
 http://127.0.0.1:5000/
 ```
 
+## Project installation in Docker
+
+Clone the repository
+
+```bash
+$ git clone https://github.com/Geffrerson7/PROJECTS-API.git
+```
+
+Go to the project directory.
+
+```bash
+$ cd PROJECTS-API
+```
+
+Run the command
+```sh
+$ docker-compose up
+```
+
+And navigate to the route
+```sh
+http://127.0.0.1:5000/
+```
+
 ## Technologies and programming languages 
 
 * **Python** (v. 3.11.2) [Source](https://www.python.org/)
